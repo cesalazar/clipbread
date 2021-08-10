@@ -10,19 +10,28 @@ const getClipboard = () => clipboardy.readSync()
 const setClipboard = (value) => clipboardy.writeSync(value)
 
 // Function names, passed as arguments
+// TODO: Include the user's functions (Eg. ~/.clipbread/config.js)
 const functions = {
+  doubleInsideSingle: () => [ functions.doubleQuote, functions.singleQuote ],
   doubleQuote: () => `"${getClipboard()}"`,
   removeNewline: () => getClipboard().replace(/(\r|\n)/gm, ' '),
+  singleInsideDouble: () => [ functions.singleQuote, functions.doubleQuote ],
   singleQuote: () => `'${getClipboard()}'`,
   trim: () => getClipboard().trim(),
+  trimEachLine: () => getClipboard().split(/(\n|\r|\s)/gm)
+    .filter((val) => !val.match(/(\n|\r|\s)/g) && val).join('\n'),
 }
 
 // Aliases for the available functions
+// TODO: Include the user's aliases (Eg. ~/.clipbread/config.js)
 const aliases = {
+  doubleInsideSingle: ['dis', 'doubleinsidesingle'],
   doubleQuote: ['adddoublequote', 'd', 'double', 'doublequote'],
   removeNewline: ['removenl', 'rnl'],
+  singleInsideDouble: ['sid', 'singleinsidedouble'],
   singleQuote: ['addsinglequote', 's', 'single', 'singlequote'],
   trim: ['t'],
+  trimEachLine: ['te', 'trimeach', 'tpl', 'trimperline'],
 }
 
 // Find function by name or alias
@@ -44,7 +53,7 @@ const findFunctionName = (needle) => {
 // List valid arguments and their aliases
 // The empty line is a unicode char: '‎'
 const showHelp = () => {
-  console.error(`You need to pass one or more arguments, or their alias:
+  console.error(`Pass one or more arguments, or their aliases:
   ‎
   ${Object.keys(functions).map(
     (fn) => `${fn} - ${aliases[fn].join(', ')}`
@@ -63,10 +72,18 @@ args.forEach((arg) => {
 
   if (! functionName) {
     console.error(`${arg} is an invalid argument`)
-    return
+    return showHelp()
   }
 
-  setClipboard(functionName())
+  const output = functionName()
+
+  // Set the value right away...
+  typeof output === 'string' && setClipboard(functionName())
+
+  // ...or execute each function in the array
+  Array.isArray(output) && output.forEach((fn) => setClipboard(fn()))
+
+  // List the operations applied
   const { name } = functionName
   const applied = arg === name ? arg : `${arg} (${name})`
   console.log(`${applied} applied`)
