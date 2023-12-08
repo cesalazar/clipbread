@@ -12,14 +12,17 @@ const setClipboard = (value) => clipboardy.writeSync(value)
 // Function names, passed as arguments
 // TODO: Include the user's functions (Eg. ~/.clipbread/config.js)
 const functions = {
-  doubleInsideSingle: () => [ functions.doubleQuote, functions.singleQuote ],
+  doubleInsideSingle: () => [functions.doubleQuote, functions.singleQuote],
   doubleQuote: () => `"${getClipboard()}"`,
   removeNewline: () => getClipboard().replace(/(\r|\n)/gm, ' '),
-  singleInsideDouble: () => [ functions.singleQuote, functions.doubleQuote ],
+  singleInsideDouble: () => [functions.singleQuote, functions.doubleQuote],
   singleQuote: () => `'${getClipboard()}'`,
   trim: () => getClipboard().trim(),
-  trimEachLine: () => getClipboard().split(/(\n|\r|\s)/gm)
-    .filter((val) => !val.match(/(\n|\r|\s)/g) && val).join('\n'),
+  trimEachLine: () =>
+    getClipboard()
+      .split(/(\n|\r|\s)/gm)
+      .filter((val) => !val.match(/(\n|\r|\s)/g) && val)
+      .join('\n'),
 }
 
 // Aliases for the available functions
@@ -38,7 +41,7 @@ const aliases = {
 const findFunctionName = (needle) => {
   let functionName = functions[needle]
 
-  if (! functionName) {
+  if (!functionName) {
     for (const [key, value] of Object.entries(aliases)) {
       if (value.includes(needle.toLowerCase())) {
         functionName = functions[key]
@@ -53,24 +56,26 @@ const findFunctionName = (needle) => {
 // List valid arguments and their aliases
 // The empty line is a unicode char: '‎'
 const showHelp = () => {
-  console.error(`Pass one or more arguments, or their aliases:
+  console.error(
+    `Pass one or more arguments, or their aliases:
   ‎
-  ${Object.keys(functions).map(
-    (fn) => `${fn} - ${aliases[fn].join(', ')}`
-  ).join('\n')}
+  ${Object.keys(functions)
+    .map((fn) => `${fn} - ${aliases[fn].join(', ')}`)
+    .join('\n')}
   ‎
-  Example: ${appName} t double singleQuote`.replace(/^\s+/gm, ''))
+  Example: ${appName} t double singleQuote`.replace(/^\s+/gm, '')
+  )
 }
 
 const args = process.argv.splice(2)
 
 // Show help and exit
-if (! args.length) return showHelp()
+if (!args.length) return showHelp()
 
 args.forEach((arg) => {
   const functionName = findFunctionName(arg)
 
-  if (! functionName) {
+  if (!functionName) {
     console.error(`${arg} is an invalid argument`)
     return showHelp()
   }
