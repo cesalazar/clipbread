@@ -3,6 +3,7 @@
 // $ clipbread t d s
 
 const clipboardy = require('clipboardy')
+
 const appName = 'clipbread'
 
 // Clipboard management
@@ -38,7 +39,7 @@ const aliases = {
 }
 
 // Find function by name or alias
-const findFunctionName = (needle) => {
+const findFunction = (needle) => {
   let functionName = functions[needle]
 
   if (!functionName) {
@@ -57,33 +58,28 @@ const findFunctionName = (needle) => {
 // The empty line is a unicode char: '‎'
 const showHelp = () => {
   console.error(
-    `Pass one or more arguments, or their aliases:
+    `Pass one or more function names, or their aliases:
   ‎
   ${Object.keys(functions)
-    .map((fn) => `${fn} - ${aliases[fn].join(', ')}`)
+    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn]?.join(', ') : ''}`)
     .join('\n')}
   ‎
   Example: ${appName} t double singleQuote`.replace(/^\s+/gm, '')
   )
 }
 
-const args = process.argv.splice(2)
-
-// Show help and exit
-if (!args.length) return showHelp()
-
-args.forEach((arg) => {
-  const functionName = findFunctionName(arg)
+const applyTransform = (arg) => {
+  const functionName = findFunction(arg)
 
   if (!functionName) {
-    console.error(`${arg} is an invalid argument`)
+    console.error(`${arg} was not found in functions nor aliases\n`)
     return showHelp()
   }
 
   const output = functionName()
 
   // Set the value right away...
-  typeof output === 'string' && setClipboard(functionName())
+  typeof output === 'string' && setClipboard(output)
 
   // ...or execute each function in the array
   Array.isArray(output) && output.forEach((fn) => setClipboard(fn()))
@@ -92,4 +88,8 @@ args.forEach((arg) => {
   const { name } = functionName
   const applied = arg === name ? arg : `${arg} (${name})`
   console.log(`${applied} applied`)
-})
+}
+
+const args = process.argv.splice(2)
+
+!args.length ? showHelp() : args.forEach((arg) => applyTransform(arg))
