@@ -43,13 +43,6 @@ module.exports = {
     ],
     'no-empty': ['error', { allowEmptyCatch: true }],
     'no-nested-ternary': 'error',
-    'no-relative-import-paths/no-relative-import-paths': [
-      'error',
-      {
-        allowSameFolder: true,
-        rootDir: 'src',
-      },
-    ],
     quotes: [
       'error',
       'single',
