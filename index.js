@@ -4,10 +4,9 @@
 // $ clipbread trim double singleQuote
 // $ clipbread t d s
 
-const { setClipboard } = require('./utils.js')
-const { aliases, functions } = require('./config.js')
-
-const appName = 'clipbread'
+const { name: appName, version, description } = require('./package')
+const { setClipboard } = require('./utils')
+const { aliases, functions } = require('./config')
 
 // Find function by name or alias
 const findFunction = (needle) => {
@@ -29,10 +28,12 @@ const findFunction = (needle) => {
 // The empty line is a unicode char: '‎'
 const showHelp = () => {
   console.error(
-    `Pass one or more function names, or their aliases:
+    `${appName} v${version} - ${description}
+  ‎
+    Pass one or more function names, or their aliases:
   ‎
   ${Object.keys(functions)
-    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn]?.join(', ') : ''}`)
+    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
     .join('\n')}
   ‎
   Example: ${appName} t double singleQuote`.replace(/^\s+/gm, '')
