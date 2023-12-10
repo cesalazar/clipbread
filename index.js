@@ -4,57 +4,10 @@
 // $ clipbread trim double singleQuote
 // $ clipbread t d s
 
-const clipboardy = require('clipboardy')
+const { setClipboard } = require('./utils.js')
+const { aliases, functions } = require('./config.js')
 
 const appName = 'clipbread'
-
-// Clipboard management
-const getClipboard = () => clipboardy.readSync()
-const setClipboard = (value) => clipboardy.writeSync(value)
-
-// Function names, passed as arguments
-// TODO: Include the user's functions (Eg. ~/.clipbread/config.js)
-const functions = {
-  curlyQuote: () => '`' + getClipboard() + '`',
-  doubleInsideSingle: () => [functions.doubleQuote, functions.singleQuote],
-  doubleQuote: () => `"${getClipboard()}"`,
-  markdownLinkFromTitle: () => `[${getClipboard()}](URL)`,
-  markdownLinkFromURL: () => `[TITLE](${getClipboard()})`,
-  removeNewline: () => getClipboard().replace(/(\r|\n)/gm, ' '),
-  replaceSpaceWithDash: () => getClipboard().replace(/\s+/gm, '-'),
-  singleInsideDouble: () => [functions.singleQuote, functions.doubleQuote],
-  singleQuote: () => `'${getClipboard()}'`,
-  snakeToCamelCase: () =>
-    getClipboard()
-      .toLowerCase()
-      .replace(/_./g, (match) => match.charAt(1).toUpperCase()),
-  toLowerCase: () => getClipboard().toLowerCase(),
-  toUpperCase: () => getClipboard().toUpperCase(),
-  trim: () => getClipboard().trim(),
-  trimEachLine: () =>
-    getClipboard()
-      .split(/(\n|\r|\s)/gm)
-      .filter((val) => !val.match(/(\n|\r|\s)/g) && val)
-      .join('\n'),
-}
-
-// Aliases for the available functions
-// TODO: Include the user's aliases (Eg. ~/.clipbread/config.js)
-const aliases = {
-  curlyQuote: ['curly', 'cq', 'curlyquote'],
-  doubleInsideSingle: ['dis', 'doubleinsidesingle'],
-  doubleQuote: ['adddoublequote', 'd', 'double', 'doublequote'],
-  markdownLinkFromTitle: ['mdlt'],
-  markdownLinkFromURL: ['mdlu'],
-  removeNewline: ['removenl', 'rnl'],
-  singleInsideDouble: ['sid', 'singleinsidedouble'],
-  singleQuote: ['addsinglequote', 's', 'single', 'singlequote'],
-  snakeToCamelCase: ['snaketocamel', 'stc'],
-  toLowerCase: ['tl', 'tlc', 'lc'],
-  toUpperCase: ['tu', 'tuc', 'uc'],
-  trim: ['t'],
-  trimEachLine: ['te', 'trimeach', 'tpl', 'trimperline'],
-}
 
 // Find function by name or alias
 const findFunction = (needle) => {
