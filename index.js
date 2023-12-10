@@ -8,6 +8,9 @@ const { name: appName, version, description } = require('./package')
 const { setClipboard } = require('./utils')
 const { aliases, functions } = require('./config')
 
+const { exit } = process
+const { log } = console
+
 // Find function by name or alias
 const findFunction = (needle) => {
   let functionName = functions[needle]
@@ -26,8 +29,8 @@ const findFunction = (needle) => {
 
 // List valid arguments and their aliases
 // The empty line is a unicode char: '‎'
-const showHelp = () => {
-  console.error(
+const showHelp = (exitCode = 0) => {
+  log(
     `${appName} v${version} - ${description}
   ‎
     Pass one or more function names, or their aliases:
@@ -38,14 +41,16 @@ const showHelp = () => {
   ‎
   Example: ${appName} t double singleQuote`.replace(/^\s+/gm, '')
   )
+
+  exit(exitCode)
 }
 
 const applyTransform = (arg) => {
   const functionName = findFunction(arg)
 
   if (!functionName) {
-    console.error(`${arg} was not found in functions nor aliases\n`)
-    return showHelp()
+    log(`${arg} was not found in functions nor aliases`)
+    return
   }
 
   const output = functionName()
@@ -59,9 +64,9 @@ const applyTransform = (arg) => {
   // List the operations applied
   const { name } = functionName
   const applied = arg === name ? arg : `${arg} (${name})`
-  console.log(`${applied} applied`)
+  log(`${applied} applied`)
 }
 
 const args = process.argv.splice(2)
 
-args.length ? args.forEach((arg) => applyTransform(arg)) : showHelp()
+args.length ? args.forEach((arg) => applyTransform(arg)) : showHelp(1)
