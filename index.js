@@ -8,8 +8,9 @@ const { name: appName, version, description } = require('./package')
 const { setClipboard } = require('./utils')
 const { aliases, functions } = require('./config')
 
-const { exit } = process
 const { log } = console
+const { argv, exit } = process
+const args = argv.splice(2)
 
 // Find function by name or alias
 const findFunction = (needle) => {
@@ -28,7 +29,7 @@ const findFunction = (needle) => {
 }
 
 // List valid arguments and their aliases
-// The empty line is a unicode char: '‎'
+// The empty line contains an invisible unicode char: '‎'
 const showHelp = (exitCode = 0) => {
   log(
     `${appName} v${version} - ${description}
@@ -67,6 +68,7 @@ const applyTransform = (arg) => {
   log(`${applied} applied`)
 }
 
-const args = process.argv.splice(2)
+args.includes('-h') && showHelp(0)
+!args.length && showHelp(1)
 
-args.length ? args.forEach((arg) => applyTransform(arg)) : showHelp(1)
+args.forEach((arg) => applyTransform(arg))
