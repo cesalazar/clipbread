@@ -1,4 +1,6 @@
-// Transform clipboard content. Eg:
+#!/usr/bin/env node
+
+// Transform the clipboard content by function name and/or aliases, e.g.:
 // $ clipbread trim double singleQuote
 // $ clipbread t d s
 
@@ -108,4 +110,4 @@ const applyTransform = (arg) => {
 
 const args = process.argv.splice(2)
 
-!args.length ? showHelp() : args.forEach((arg) => applyTransform(arg))
+args.length ? args.forEach((arg) => applyTransform(arg)) : showHelp()
