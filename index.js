@@ -13,19 +13,23 @@ const { argv, exit } = process
 const args = argv.splice(2)
 
 // Find function by name or alias
-const findFunction = (needle) => {
-  let functionName = functions[needle]
+const findFunction = (functionNameOrAlias) => {
+  const needle = functionNameOrAlias.toLowerCase()
+
+  let functionName =
+    functions[needle] ||
+    functions[Object.keys(functions).find((fn) => fn.toLowerCase() === needle)]
 
   if (!functionName) {
-    for (const [key, value] of Object.entries(aliases)) {
-      if (value.includes(needle.toLowerCase())) {
+    for (const [key, values] of Object.entries(aliases)) {
+      if ([key.toLowerCase(), ...values].includes(needle)) {
         functionName = functions[key]
         break
       }
     }
   }
 
-  return functionName || null
+  return functionName
 }
 
 // List valid arguments and their aliases

@@ -27,19 +27,19 @@ const functions = {
 }
 
 const aliases = {
-  curlyQuote: ['cq', 'curlyquote'],
-  doubleInsideSingle: ['dis', 'doubleinsidesingle'],
-  doubleQuote: ['adddoublequote', 'd', 'double', 'doublequote'],
+  curlyQuote: ['cq'],
+  doubleInsideSingle: ['dqis'],
+  doubleQuote: ['adddoublequote', 'dq'],
   markdownLinkFromTitle: ['mdlft', 'mdlt'],
   markdownLinkFromURL: ['mdlfu', 'mdlu'],
   removeNewline: ['removenl', 'rnl'],
-  singleInsideDouble: ['sid', 'singleinsidedouble'],
-  singleQuote: ['addsinglequote', 's', 'single', 'singlequote'],
+  singleInsideDouble: ['sid'],
+  singleQuote: ['addsinglequote', 's', 'single'],
   snakeToCamelCase: ['snaketocamel', 'stc'],
   toLowerCase: ['tl', 'tlc', 'lc'],
   toUpperCase: ['tu', 'tuc', 'uc'],
   trim: ['t'],
-  trimEachLine: ['tel', 'trimeach', 'tpl', 'trimperline'],
+  trimEachLine: ['tel', 'tpl', 'trimperline'],
 }
 
 module.exports = {
