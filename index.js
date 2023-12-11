@@ -12,18 +12,21 @@ const { log } = console
 const { argv, exit } = process
 const args = argv.splice(2)
 
-// Find function by name or alias
-const findFunction = (functionNameOrAlias) => {
-  const needle = functionNameOrAlias.toLowerCase()
+const getFunctionByLowerCaseName = (functionName) =>
+  functions[
+    Object.keys(functions).find(
+      (fn) => fn.toLowerCase() === functionName.toLowerCase()
+    )
+  ]
 
-  let functionName =
-    functions[needle] ||
-    functions[Object.keys(functions).find((fn) => fn.toLowerCase() === needle)]
+const findFunctionByNameOrAlias = (functionNameOrAlias) => {
+  const needle = functionNameOrAlias.toLowerCase()
+  let functionName = getFunctionByLowerCaseName(needle)
 
   if (!functionName) {
     for (const [key, values] of Object.entries(aliases)) {
       if ([key.toLowerCase(), ...values].includes(needle)) {
-        functionName = functions[key]
+        functionName = getFunctionByLowerCaseName(key)
         break
       }
     }
@@ -51,7 +54,7 @@ const showHelp = (exitCode = 0) => {
 }
 
 const applyTransform = (arg) => {
-  const functionName = findFunction(arg)
+  const functionName = findFunctionByNameOrAlias(arg)
 
   if (!functionName) {
     log(`${arg} was not found in functions nor aliases`)
