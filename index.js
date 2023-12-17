@@ -1,95 +1,76 @@
-// Transform clipboard content. Eg:
+#!/usr/bin/env node
+
+// Transform the clipboard content by function name and/or aliases, e.g.:
 // $ clipbread trim double singleQuote
 // $ clipbread t d s
 
-const clipboardy = require('clipboardy')
+const { name: appName, version, description } = require('./package')
+const {
+  getFilePathOrFallback,
+  setClipboard,
+  setUserConfig,
+} = require('./utils')
 
-const appName = 'clipbread'
+const configFile = './config.js'
+const userConfigFile = `${process.env.XDG_CONFIG_DIR}/${appName}/${configFile}`
 
-// Clipboard management
-const getClipboard = () => clipboardy.readSync()
-const setClipboard = (value) => clipboardy.writeSync(value)
+const { aliases, functions } = require(
+  getFilePathOrFallback(userConfigFile, configFile)
+)
 
-// Function names, passed as arguments
-// TODO: Include the user's functions (Eg. ~/.clipbread/config.js)
-const functions = {
-  curlyQuote: () => '`' + getClipboard() + '`',
-  doubleInsideSingle: () => [functions.doubleQuote, functions.singleQuote],
-  doubleQuote: () => `"${getClipboard()}"`,
-  markdownLinkFromTitle: () => `[${getClipboard()}](URL)`,
-  markdownLinkFromURL: () => `[TITLE](${getClipboard()})`,
-  removeNewline: () => getClipboard().replace(/(\r|\n)/gm, ' '),
-  replaceSpaceWithDash: () => getClipboard().replace(/\s+/gm, '-'),
-  singleInsideDouble: () => [functions.singleQuote, functions.doubleQuote],
-  singleQuote: () => `'${getClipboard()}'`,
-  snakeToCamelCase: () =>
-    getClipboard()
-      .toLowerCase()
-      .replace(/_./g, (match) => match.charAt(1).toUpperCase()),
-  toLowerCase: () => getClipboard().toLowerCase(),
-  toUpperCase: () => getClipboard().toUpperCase(),
-  trim: () => getClipboard().trim(),
-  trimEachLine: () =>
-    getClipboard()
-      .split(/(\n|\r|\s)/gm)
-      .filter((val) => !val.match(/(\n|\r|\s)/g) && val)
-      .join('\n'),
-}
+const { log } = console
+const { argv, exit } = process
+const args = argv.splice(2)
 
-// Aliases for the available functions
-// TODO: Include the user's aliases (Eg. ~/.clipbread/config.js)
-const aliases = {
-  curlyQuote: ['curly', 'cq', 'curlyquote'],
-  doubleInsideSingle: ['dis', 'doubleinsidesingle'],
-  doubleQuote: ['adddoublequote', 'd', 'double', 'doublequote'],
-  markdownLinkFromTitle: ['mdlt'],
-  markdownLinkFromURL: ['mdlu'],
-  removeNewline: ['removenl', 'rnl'],
-  singleInsideDouble: ['sid', 'singleinsidedouble'],
-  singleQuote: ['addsinglequote', 's', 'single', 'singlequote'],
-  snakeToCamelCase: ['snaketocamel', 'stc'],
-  toLowerCase: ['tl', 'tlc', 'lc'],
-  toUpperCase: ['tu', 'tuc', 'uc'],
-  trim: ['t'],
-  trimEachLine: ['te', 'trimeach', 'tpl', 'trimperline'],
-}
+const getFunctionByLowerCaseName = (functionName) =>
+  functions[
+    Object.keys(functions).find(
+      (fn) => fn.toLowerCase() === functionName.toLowerCase()
+    )
+  ]
 
-// Find function by name or alias
-const findFunction = (needle) => {
-  let functionName = functions[needle]
+const findFunctionByNameOrAlias = (functionNameOrAlias) => {
+  const needle = functionNameOrAlias.toLowerCase()
+  let functionName = getFunctionByLowerCaseName(needle)
 
   if (!functionName) {
-    for (const [key, value] of Object.entries(aliases)) {
-      if (value.includes(needle.toLowerCase())) {
-        functionName = functions[key]
+    for (const [key, values] of Object.entries(aliases)) {
+      if ([key.toLowerCase(), ...values].includes(needle)) {
+        functionName = getFunctionByLowerCaseName(key)
         break
       }
     }
   }
 
-  return functionName || null
+  return functionName
 }
 
 // List valid arguments and their aliases
-// The empty line is a unicode char: '‎'
-const showHelp = () => {
-  console.error(
-    `Pass one or more function names, or their aliases:
+// The empty line contains an invisible unicode char: '‎'
+const showHelp = (exitCode = 0) => {
+  log(
+    `${appName} v${version} - ${description}
+  ‎
+    Pass one or more function names, or their aliases:
   ‎
   ${Object.keys(functions)
-    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn]?.join(', ') : ''}`)
+    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
     .join('\n')}
   ‎
-  Example: ${appName} t double singleQuote`.replace(/^\s+/gm, '')
+  Example: ${appName} t double singleQuote
+  ‎
+  Use ${appName} -i to initialize the user config`.replace(/^\s+/gm, '')
   )
+
+  exit(exitCode)
 }
 
 const applyTransform = (arg) => {
-  const functionName = findFunction(arg)
+  const functionName = findFunctionByNameOrAlias(arg)
 
   if (!functionName) {
-    console.error(`${arg} was not found in functions nor aliases\n`)
-    return showHelp()
+    log(`${arg} was not found in functions nor aliases`)
+    return
   }
 
   const output = functionName()
@@ -103,9 +84,16 @@ const applyTransform = (arg) => {
   // List the operations applied
   const { name } = functionName
   const applied = arg === name ? arg : `${arg} (${name})`
-  console.log(`${applied} applied`)
+  log(`${applied} applied`)
 }
 
-const args = process.argv.splice(2)
+if (args.includes('-i')) {
+  setUserConfig(configFile)
+  exit(0)
+}
 
-!args.length ? showHelp() : args.forEach((arg) => applyTransform(arg))
+args.includes('-h') && showHelp(0)
+
+!args.length && showHelp(1)
+
+args.forEach((arg) => applyTransform(arg))
