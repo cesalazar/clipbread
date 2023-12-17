@@ -1,7 +1,10 @@
 const clipboardy = require('clipboardy')
+const fs = require('fs')
 
-// Clipboard management
+const fileExists = (filePath) => fs.existsSync(filePath)
+
 const getClipboard = () => clipboardy.readSync()
+
 const setClipboard = (value) => clipboardy.writeSync(value)
 
-module.exports = { getClipboard, setClipboard }
+module.exports = { fileExists, getClipboard, setClipboard }
