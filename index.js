@@ -5,12 +5,16 @@
 // $ clipbread t d s
 
 const { name: appName, version, description } = require('./package')
-const { setClipboard } = require('./utils')
-const { aliases, functions } = require('./config')
+const { fileExists, setClipboard } = require('./utils')
 
 const { log } = console
-const { argv, exit } = process
+const { argv, env, exit } = process
 const args = argv.splice(2)
+
+let configFile = 'config.js'
+const userConfigFile = `${env.XDG_CONFIG_DIR}/${appName}/${configFile}`
+configFile = fileExists(userConfigFile) ? userConfigFile : `./${configFile}`
+const { aliases, functions } = require(configFile)
 
 const getFunctionByLowerCaseName = (functionName) =>
   functions[

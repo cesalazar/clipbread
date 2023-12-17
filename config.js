@@ -1,4 +1,4 @@
-const { getClipboard } = require(`${process.mainModule.path}/utils.js`)
+const { getClipboard } = require(`${process.mainModule.path}/utils`)
 
 // Modify to your hearth's content!
 
