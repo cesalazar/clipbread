@@ -5,16 +5,18 @@
 // $ clipbread t d s
 
 const { name: appName, version, description } = require('./package')
-const { fileExists, setClipboard } = require('./utils')
+const { getFilePathOrFallback, setClipboard } = require('./utils')
+
+const configFile = 'config.js'
+const userConfigFile = `${process.env.XDG_CONFIG_DIR}/${appName}/${configFile}`
+
+const { aliases, functions } = require(
+  getFilePathOrFallback(userConfigFile, configFile)
+)
 
 const { log } = console
-const { argv, env, exit } = process
+const { argv, exit } = process
 const args = argv.splice(2)
-
-let configFile = 'config.js'
-const userConfigFile = `${env.XDG_CONFIG_DIR}/${appName}/${configFile}`
-configFile = fileExists(userConfigFile) ? userConfigFile : `./${configFile}`
-const { aliases, functions } = require(configFile)
 
 const getFunctionByLowerCaseName = (functionName) =>
   functions[
