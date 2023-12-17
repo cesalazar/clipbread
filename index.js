@@ -11,7 +11,7 @@ const {
   setUserConfig,
 } = require('./utils')
 
-const configFile = 'config.js'
+const configFile = './config.js'
 const userConfigFile = `${process.env.XDG_CONFIG_DIR}/${appName}/${configFile}`
 
 const { aliases, functions } = require(
