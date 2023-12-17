@@ -5,7 +5,11 @@
 // $ clipbread t d s
 
 const { name: appName, version, description } = require('./package')
-const { getFilePathOrFallback, setClipboard } = require('./utils')
+const {
+  getFilePathOrFallback,
+  setClipboard,
+  setUserConfig,
+} = require('./utils')
 
 const configFile = 'config.js'
 const userConfigFile = `${process.env.XDG_CONFIG_DIR}/${appName}/${configFile}`
@@ -81,7 +85,13 @@ const applyTransform = (arg) => {
   log(`${applied} applied`)
 }
 
+if (args.includes('-i')) {
+  setUserConfig(configFile)
+  exit(0)
+}
+
 args.includes('-h') && showHelp(0)
+
 !args.length && showHelp(1)
 
 args.forEach((arg) => applyTransform(arg))
