@@ -57,7 +57,9 @@ const showHelp = (exitCode = 0) => {
     .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
     .join('\n')}
   ‎
-  Example: ${appName} t double singleQuote`.replace(/^\s+/gm, '')
+  Example: ${appName} t double singleQuote
+  ‎
+  Use ${appName} -i to initialize the user config`.replace(/^\s+/gm, '')
   )
 
   exit(exitCode)
