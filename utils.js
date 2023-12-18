@@ -4,12 +4,19 @@ const os = require('os')
 const path = require('path')
 const { name: appName } = require('./package')
 
+const { log } = console
+
 const fileExists = (filePath) => fs.existsSync(filePath)
 
 const getClipboard = () => clipboardy.readSync()
 
 const getFilePathOrFallback = (file, fallback) =>
   fileExists(file) ? file : fallback
+
+const listFunctionsAndAliases = (functions, aliases) =>
+  Object.keys(functions)
+    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
+    .join('\n')
 
 const setClipboard = (value) => clipboardy.writeSync(value)
 
@@ -22,7 +29,7 @@ const setUserConfig = (configFile) => {
   !fileExists(targetDir) && fs.mkdirSync(targetDir, { recursive: true })
 
   if (fileExists(`${targetDir}/${configFile}`)) {
-    console.log(`${targetDir}/${configFile} exists already, nothing to do`)
+    log(`${targetDir}/${configFile} exists already, nothing to do`)
     return
   }
 
@@ -31,13 +38,14 @@ const setUserConfig = (configFile) => {
     path.join(targetDir, configFile)
   )
 
-  console.log('Files copied successfully to', targetDir)
+  log('Files copied successfully to', targetDir)
 }
 
 module.exports = {
   fileExists,
   getClipboard,
   getFilePathOrFallback,
+  listFunctionsAndAliases,
   setClipboard,
   setUserConfig,
 }
