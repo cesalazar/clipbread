@@ -5,13 +5,19 @@ const path = require('path')
 const { name: appName } = require('./package')
 
 const { log } = console
+const { env } = process
 
 const fileExists = (filePath) => fs.existsSync(filePath)
 
 const getClipboard = () => clipboardy.readSync()
 
-const getFilePathOrFallback = (file, fallback) =>
-  fileExists(file) ? file : fallback
+const getConfigFile = (fileName) => {
+  const appConfigPath = `${getOsConfigDir()}/${appName}/${fileName}`
+  return fileExists(appConfigPath) ? appConfigPath : fileName
+}
+
+const getOsConfigDir = () =>
+  env.XDG_CONFIG_DIR ?? path.join(os.homedir(), '.config')
 
 const listFunctionsAndAliases = (functions, aliases) =>
   Object.keys(functions)
@@ -22,9 +28,7 @@ const setClipboard = (value) => clipboardy.writeSync(value)
 
 const setUserConfig = (configFile) => {
   // TODO: does this work on Windows?
-  const configDir =
-    process.env.XDG_CONFIG_DIR || path.join(os.homedir(), '.config')
-  const targetDir = path.join(configDir, appName)
+  const targetDir = path.join(getOsConfigDir(), appName)
 
   !fileExists(targetDir) && fs.mkdirSync(targetDir, { recursive: true })
 
@@ -44,7 +48,7 @@ const setUserConfig = (configFile) => {
 module.exports = {
   fileExists,
   getClipboard,
-  getFilePathOrFallback,
+  getConfigFile,
   listFunctionsAndAliases,
   setClipboard,
   setUserConfig,

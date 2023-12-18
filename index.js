@@ -6,18 +6,14 @@
 
 const { name: appName, version, description } = require('./package')
 const {
-  getFilePathOrFallback,
+  getConfigFile,
   listFunctionsAndAliases,
   setClipboard,
   setUserConfig,
 } = require('./utils')
 
 const configFile = './config.js'
-const userConfigFile = `${process.env.XDG_CONFIG_DIR}/${appName}/${configFile}`
-
-const { aliases, functions } = require(
-  getFilePathOrFallback(userConfigFile, configFile)
-)
+const { aliases, functions } = require(getConfigFile(configFile))
 
 const { log } = console
 const { argv, exit } = process
