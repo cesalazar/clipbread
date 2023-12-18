@@ -87,7 +87,7 @@ const applyTransform = (arg) => {
 }
 
 if (args.includes('-l')) {
-  console.log(listFunctionsAndAliases(functions, aliases))
+  log(listFunctionsAndAliases(functions, aliases))
   exit(0)
 }
 
