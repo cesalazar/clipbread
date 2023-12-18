@@ -7,6 +7,7 @@
 const { name: appName, version, description } = require('./package')
 const {
   getFilePathOrFallback,
+  listFunctionsAndAliases,
   setClipboard,
   setUserConfig,
 } = require('./utils')
@@ -51,11 +52,9 @@ const showHelp = (exitCode = 0) => {
   log(
     `${appName} v${version} - ${description}
   ‎
-    Pass one or more function names, or their aliases:
+  Pass one or more function names, or their aliases:
   ‎
-  ${Object.keys(functions)
-    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
-    .join('\n')}
+  ${listFunctionsAndAliases(functions, aliases)}
   ‎
   Example: ${appName} t double singleQuote
   ‎
@@ -85,6 +84,11 @@ const applyTransform = (arg) => {
   const { name } = functionName
   const applied = arg === name ? arg : `${arg} (${name})`
   log(`${applied} applied`)
+}
+
+if (args.includes('-l')) {
+  console.log(listFunctionsAndAliases(functions, aliases))
+  exit(0)
 }
 
 if (args.includes('-i')) {

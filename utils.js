@@ -11,6 +11,11 @@ const getClipboard = () => clipboardy.readSync()
 const getFilePathOrFallback = (file, fallback) =>
   fileExists(file) ? file : fallback
 
+const listFunctionsAndAliases = (functions, aliases) =>
+  Object.keys(functions)
+    .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
+    .join('\n')
+
 const setClipboard = (value) => clipboardy.writeSync(value)
 
 const setUserConfig = (configFile) => {
@@ -38,6 +43,7 @@ module.exports = {
   fileExists,
   getClipboard,
   getFilePathOrFallback,
+  listFunctionsAndAliases,
   setClipboard,
   setUserConfig,
 }
