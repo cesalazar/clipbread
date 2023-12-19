@@ -13,8 +13,8 @@ const {
   setUserConfig,
 } = require('./utils')
 
-const configFile = './config.js'
-const { aliases, functions } = require(getConfigFile(configFile))
+const configFile = getConfigFile('config.js')
+const { aliases, functions } = require(configFile)
 
 const { log } = console
 const { argv, exit } = process

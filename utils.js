@@ -5,7 +5,7 @@ const path = require('path')
 const { name: appName } = require('./package')
 
 const { log } = console
-const { argv, env } = process
+const { argv, env, mainModule } = process
 const args = argv.splice(2)
 
 const fileExists = (filePath) => fs.existsSync(filePath)
@@ -14,13 +14,15 @@ const getClipboard = () => clipboardy.readSync()
 
 const getConfigFile = (fileName) => {
   const appConfigPath = `${getOsConfigDir()}/${appName}/${fileName}`
-  return fileExists(appConfigPath) ? appConfigPath : fileName
+  return fileExists(appConfigPath)
+    ? appConfigPath
+    : `${mainModule.path}/${fileName}`
 }
 
 const hasArg = (arg) => args.includes(arg)
 
 const getOsConfigDir = () =>
-  env.XDG_CONFIG_DIR ?? path.join(os.homedir(), '.config')
+  env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config')
 
 const listFunctionsAndAliases = (functions, aliases) =>
   Object.keys(functions)
