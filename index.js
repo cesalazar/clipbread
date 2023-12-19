@@ -7,11 +7,11 @@
 const { name: appName, version, description } = require('./package')
 const {
   args,
-  exit,
   getConfigFile,
   hasArg,
   listFunctionsAndAliases,
   log,
+  logAndExit,
   setClipboard,
   setUserConfig,
 } = require('./utils')
@@ -43,23 +43,20 @@ const findFunctionByNameOrAlias = (functionNameOrAlias) => {
   return functionName
 }
 
-// List valid arguments and their aliases
 // The empty line contains an invisible unicode char: '‎'
-const showHelp = (exitCode = 0) => {
-  log(
+const showHelp = (exitCode = 0) =>
+  logAndExit(
     `${appName} v${version} - ${description}
-  ‎
-  Pass one or more function names, or their aliases:
-  ‎
-  ${listFunctionsAndAliases(functions, aliases)}
-  ‎
-  Example: ${appName} t double singleQuote
-  ‎
-  Use ${appName} -i to initialize the user config`.replace(/^\s+/gm, '')
+    ‎
+    Pass one or more function names, or their aliases:
+    ‎
+    ${listFunctionsAndAliases(functions, aliases)}
+    ‎
+    Example: ${appName} t double singleQuote
+    ‎
+    Use ${appName} -i to initialize the user config`.replace(/^\s+/gm, ''),
+    exitCode
   )
-
-  exit(exitCode)
-}
 
 const applyTransform = (arg) => {
   const functionName = findFunctionByNameOrAlias(arg)
@@ -85,15 +82,9 @@ const applyTransform = (arg) => {
   }
 }
 
-if (hasArg('-l')) {
-  log(listFunctionsAndAliases(functions, aliases))
-  exit(0)
-}
+hasArg('-l') && logAndExit(listFunctionsAndAliases(functions, aliases))
 
-if (hasArg('-i')) {
-  setUserConfig(configFileName)
-  exit(0)
-}
+hasArg('-i') && logAndExit(setUserConfig(configFileName))
 
 hasArg('-h') && showHelp(0)
 
