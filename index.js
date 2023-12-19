@@ -16,7 +16,8 @@ const {
   setUserConfig,
 } = require('./utils')
 
-const configFile = getConfigFile('config.js')
+const configFileName = 'config.js'
+const configFile = getConfigFile(configFileName)
 const { aliases, functions } = require(configFile)
 
 const getFunctionByLowerCaseName = (functionName) =>
@@ -90,7 +91,7 @@ if (hasArg('-l')) {
 }
 
 if (hasArg('-i')) {
-  setUserConfig(configFile)
+  setUserConfig(configFileName)
   exit(0)
 }
 

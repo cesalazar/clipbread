@@ -12,17 +12,17 @@ const fileExists = (filePath) => fs.existsSync(filePath)
 
 const getClipboard = () => clipboardy.readSync()
 
-const getConfigFile = (fileName) => {
-  const appConfigPath = `${getOsConfigDir()}/${appName}/${fileName}`
+const getConfigFile = (configFileName) => {
+  const appConfigPath = `${getOsConfigDir()}/${appName}/${configFileName}`
   return fileExists(appConfigPath)
     ? appConfigPath
-    : `${mainModule.path}/${fileName}`
+    : `${mainModule.path}/${configFileName}`
 }
-
-const hasArg = (arg) => args.includes(arg)
 
 const getOsConfigDir = () =>
   env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config')
+
+const hasArg = (arg) => args.includes(arg)
 
 const listFunctionsAndAliases = (functions, aliases) =>
   Object.keys(functions)
@@ -31,23 +31,24 @@ const listFunctionsAndAliases = (functions, aliases) =>
 
 const setClipboard = (value) => clipboardy.writeSync(value)
 
-const setUserConfig = (configFile) => {
+const setUserConfig = (configFileName) => {
   // TODO: does this work on Windows?
   const targetDir = path.join(getOsConfigDir(), appName)
+  const targetFile = `${targetDir}/${configFileName}`
 
   !fileExists(targetDir) && fs.mkdirSync(targetDir, { recursive: true })
 
-  if (fileExists(`${targetDir}/${configFile}`)) {
-    log(`${targetDir}/${configFile} exists already, nothing to do`)
+  if (fileExists(targetFile)) {
+    log(`File ${targetFile} exists already, remove it and try again`)
     return
   }
 
   fs.copyFileSync(
-    path.join(__dirname, configFile),
-    path.join(targetDir, configFile)
+    path.join(__dirname, configFileName),
+    path.join(targetDir, configFileName)
   )
 
-  log('Files copied successfully to', targetDir)
+  log('Config file successfully copied to', targetFile)
 }
 
 module.exports = {
