@@ -7,6 +7,7 @@
 const { name: appName, version, description } = require('./package')
 const {
   getConfigFile,
+  hasArg,
   listFunctionsAndAliases,
   setClipboard,
   setUserConfig,
@@ -77,24 +78,24 @@ const applyTransform = (arg) => {
   Array.isArray(output) && output.forEach((fn) => setClipboard(fn()))
 
   // List the operations applied if '-q' (for quiet) is not present
-  if (!args.includes('-q')) {
+  if (!hasArg('-q')) {
     const { name } = functionName
     const applied = arg === name ? arg : `${arg} (${name})`
     log(`${applied} applied`)
   }
 }
 
-if (args.includes('-l')) {
+if (hasArg('-l')) {
   log(listFunctionsAndAliases(functions, aliases))
   exit(0)
 }
 
-if (args.includes('-i')) {
+if (hasArg('-i')) {
   setUserConfig(configFile)
   exit(0)
 }
 
-args.includes('-h') && showHelp(0)
+hasArg('-h') && showHelp(0)
 
 !args.length && showHelp(1)
 
