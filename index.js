@@ -6,19 +6,18 @@
 
 const { name: appName, version, description } = require('./package')
 const {
+  args,
+  exit,
   getConfigFile,
   hasArg,
   listFunctionsAndAliases,
+  log,
   setClipboard,
   setUserConfig,
 } = require('./utils')
 
 const configFile = getConfigFile('config.js')
 const { aliases, functions } = require(configFile)
-
-const { log } = console
-const { argv, exit } = process
-const args = argv.splice(2)
 
 const getFunctionByLowerCaseName = (functionName) =>
   functions[

@@ -5,7 +5,7 @@ const path = require('path')
 const { name: appName } = require('./package')
 
 const { log } = console
-const { argv, env, mainModule } = process
+const { argv, env, exit, mainModule } = process
 const args = argv.splice(2)
 
 const fileExists = (filePath) => fs.existsSync(filePath)
@@ -51,11 +51,14 @@ const setUserConfig = (configFile) => {
 }
 
 module.exports = {
+  args,
+  exit,
   fileExists,
   getClipboard,
   getConfigFile,
   hasArg,
   listFunctionsAndAliases,
+  log,
   setClipboard,
   setUserConfig,
 }
