@@ -76,10 +76,12 @@ const applyTransform = (arg) => {
   // ...or execute each function in the array
   Array.isArray(output) && output.forEach((fn) => setClipboard(fn()))
 
-  // List the operations applied
-  const { name } = functionName
-  const applied = arg === name ? arg : `${arg} (${name})`
-  log(`${applied} applied`)
+  // List the operations applied if '-q' (for quiet) is not present
+  if (!args.includes('-q')) {
+    const { name } = functionName
+    const applied = arg === name ? arg : `${arg} (${name})`
+    log(`${applied} applied`)
+  }
 }
 
 if (args.includes('-l')) {
@@ -96,4 +98,4 @@ args.includes('-h') && showHelp(0)
 
 !args.length && showHelp(1)
 
-args.forEach((arg) => applyTransform(arg))
+args.forEach((arg) => arg !== '-q' && applyTransform(arg))
