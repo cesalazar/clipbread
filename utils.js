@@ -29,6 +29,11 @@ const listFunctionsAndAliases = (functions, aliases) =>
     .map((fn) => `${fn} ${aliases[fn] ? '- ' + aliases[fn].join(', ') : ''}`)
     .join('\n')
 
+const logAndExit = (message, exitCode = 0) => {
+  log(message)
+  exit(exitCode)
+}
+
 const setClipboard = (value) => clipboardy.writeSync(value)
 
 const setUserConfig = (configFileName) => {
@@ -39,8 +44,7 @@ const setUserConfig = (configFileName) => {
   !fileExists(targetDir) && fs.mkdirSync(targetDir, { recursive: true })
 
   if (fileExists(targetFile)) {
-    log(`File ${targetFile} exists already, remove it and try again`)
-    return
+    return `File ${targetFile} exists already, remove it and try again`
   }
 
   fs.copyFileSync(
@@ -48,7 +52,7 @@ const setUserConfig = (configFileName) => {
     path.join(targetDir, configFileName)
   )
 
-  log('Config file successfully copied to', targetFile)
+  return `Config file successfully copied to ${targetFile}`
 }
 
 module.exports = {
@@ -60,6 +64,7 @@ module.exports = {
   hasArg,
   listFunctionsAndAliases,
   log,
+  logAndExit,
   setClipboard,
   setUserConfig,
 }
