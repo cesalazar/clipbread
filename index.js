@@ -6,18 +6,19 @@
 
 const { name: appName, version, description } = require('./package')
 const {
+  args,
+  exit,
   getConfigFile,
+  hasArg,
   listFunctionsAndAliases,
+  log,
   setClipboard,
   setUserConfig,
 } = require('./utils')
 
-const configFile = './config.js'
-const { aliases, functions } = require(getConfigFile(configFile))
-
-const { log } = console
-const { argv, exit } = process
-const args = argv.splice(2)
+const configFileName = 'config.js'
+const configFile = getConfigFile(configFileName)
+const { aliases, functions } = require(configFile)
 
 const getFunctionByLowerCaseName = (functionName) =>
   functions[
@@ -76,24 +77,26 @@ const applyTransform = (arg) => {
   // ...or execute each function in the array
   Array.isArray(output) && output.forEach((fn) => setClipboard(fn()))
 
-  // List the operations applied
-  const { name } = functionName
-  const applied = arg === name ? arg : `${arg} (${name})`
-  log(`${applied} applied`)
+  // List the operations applied if '-q' (for quiet) is not present
+  if (!hasArg('-q')) {
+    const { name } = functionName
+    const applied = arg === name ? arg : `${arg} (${name})`
+    log(`${applied} applied`)
+  }
 }
 
-if (args.includes('-l')) {
+if (hasArg('-l')) {
   log(listFunctionsAndAliases(functions, aliases))
   exit(0)
 }
 
-if (args.includes('-i')) {
-  setUserConfig(configFile)
+if (hasArg('-i')) {
+  setUserConfig(configFileName)
   exit(0)
 }
 
-args.includes('-h') && showHelp(0)
+hasArg('-h') && showHelp(0)
 
 !args.length && showHelp(1)
 
-args.forEach((arg) => applyTransform(arg))
+args.forEach((arg) => arg !== '-q' && applyTransform(arg))
