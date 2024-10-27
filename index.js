@@ -7,6 +7,7 @@
 const { name: appName, version, description } = require('./package')
 const {
   args,
+  getClipboard,
   getConfigFile,
   hasArg,
   listFunctionsAndAliases,
@@ -78,7 +79,10 @@ const applyTransform = (arg) => {
   if (!hasArg('-q')) {
     const { name } = functionName
     const applied = arg === name ? arg : `${arg} (${name})`
-    log(`${applied} applied`)
+    const transformedOutput = `${applied} applied: ${getClipboard()}`
+
+    // Log only the first transformed line unless '-L' (for Long) is present
+    log(hasArg('-L') ? transformedOutput : transformedOutput.split('\n')?.[0])
   }
 }
 
@@ -90,4 +94,4 @@ hasArg('-h') && showHelp(0)
 
 !args.length && showHelp(1)
 
-args.forEach((arg) => arg !== '-q' && applyTransform(arg))
+args.forEach((arg) => !['-L', '-q'].includes(arg) && applyTransform(arg))

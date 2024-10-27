@@ -34,7 +34,7 @@ const aliases = {
   markdownLinkFromURL: ['mdlfu', 'mdlu'],
   removeNewline: ['removenl', 'rnl'],
   singleInsideDouble: ['sid'],
-  singleQuote: ['addsinglequote', 's', 'single'],
+  singleQuote: ['addsinglequote', 'sq', 'single'],
   snakeToCamelCase: ['snaketocamel', 'stc'],
   toLowerCase: ['tl', 'tlc', 'lc'],
   toUpperCase: ['tu', 'tuc', 'uc'],
