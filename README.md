@@ -21,7 +21,7 @@ clipbread comes with few examples in its config file, but it's intended to be
 customized by you, the user. Start by executing `clipbread -i` to copy the
 config files to your `$HOME`.
 
-Feel free to check [my config](myconfig) for inspiration.
+Check [my config][myconfig] for inspiration.
 
 ## FAQ
 
