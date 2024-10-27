@@ -49,13 +49,19 @@ const showHelp = (exitCode = 0) =>
   logAndExit(
     `${appName} v${version} - ${description}
     ‎
-    Pass one or more function names, or their aliases:
+    Options:
+    ‎  -h  Show this help text
+    ‎  -i  Initialize the user config
+    ‎  -l  List functions and aliases without help text
+    ‎  -L  Long output: print the entire transformed text
+    ‎  -q  Quiet: do not print any output
     ‎
+    Pass one or more function names, or their aliases. Example:
+    ‎  ${appName} -L t double singleQuote
+    ‎
+    Available functions and aliases:
     ${listFunctionsAndAliases(functions, aliases)}
-    ‎
-    Example: ${appName} t double singleQuote
-    ‎
-    Use ${appName} -i to initialize the user config`.replace(/^\s+/gm, ''),
+    ‎`.replace(/^\s+/gm, ''),
     exitCode
   )
 
