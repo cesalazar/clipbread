@@ -48,4 +48,5 @@ A: I know.
 [fzf]: https://github.com/junegunn/fzf
 [myconfig]: https://gist.github.com/cesalazar/d64cffc85c635b4384307bc76b175fd8
 [node]: https://nodejs.org/en
+[rofi]: https://github.com/davatorium/rofi
 [wrappers]: ./wrappers/README.md
