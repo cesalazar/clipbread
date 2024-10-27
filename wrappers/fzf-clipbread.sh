@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Use clipbread in rofi dmenu mode
+# Apply clipbread transformations using fzf
 
 SCRIPT="$(dirname "$(realpath "$0")")/base-script.sh"
-PROMPT="🍞 clipbread"
+SELECT=$($SCRIPT | fzf | awk '{print $1}')
 
-rofi -sort -sorting-method "fzf" -modes "$PROMPT:$SCRIPT" -show "$PROMPT"
+for OPT in $SELECT; do "$SCRIPT" "$OPT"; done
 
 # vim: fdm=manual tabstop=4 softtabstop=4 shiftwidth=4 expandtab:
