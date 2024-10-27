@@ -25,44 +25,23 @@ Feel free to check [my config](myconfig) for inspiration.
 
 ## FAQ
 
-<details>
-  <summary>
-    <b>My custom function is not being executed in the wrapper, what do?</b>
-  </summary>
+**Q: My custom function is not being executed in the wrapper, what do?**\
+A: Run clipbread in a terminal in case it's throwing an error, then check how to
+debug in the docs of the wrapper you're using/piping to.
 
-  Run clipbread in a terminal in case it's throwing an error, then check how to
-  debug in the docs of the wrapper you're using/piping to.
-</details>
+**Q: Does this work with [bun][bun] or [deno][deno]?**\
+A: Yes, but you'll have to make changes in the scripts. I did a very basic check
+for the lulz, but I don't use those regularly.
 
-<details>
-  <summary>
-    <b>Does this work with [bun][bun] or [deno][deno]?</b>
-  </summary>
-  Yes, but you'll have to make changes in the scripts. I did a very basic check
-  for the lulz, but I don't use those regularly.
-</details>
+**Q: I don't know how to program, can I still use this?**\
+A: Sure, ask ChatGPT or any other AI to write a function to do what you want to
+achieve, and paste it in your config file.
 
-<details>
-  <summary>
-    <b>I don't know how to program, can I still use this?</b>
-  </summary>
-  Sure, ask ChatGPT or any other AI to write a function to do what you want to
-  achieve, and paste it in your config file.
-</details>
+**Q: Why didn't you write this on TypeScript, Rust, Cobol, a napkin?**\
+A: Yes.
 
-<details>
-  <summary>
-    <b>Why didn't you write this on TypeScript, Rust, Cobol, a napkin?</b>
-  </summary>
-  Yes.
-</details>
-
-<details>
-  <summary>
-    <b>Seriously, JavaScript sucks.</b>
-  </summary>
-  I know. This is not a question.
-</details>
+**Q: Seriously, JavaScript sucks.**\
+A: I know.
 
 [alfred]: https://www.alfredapp.com/
 [bun]: https://bun.sh/
