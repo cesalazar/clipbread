@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# /!\ Keep this file in the same directory as other wrappers /!\
+
 # Debug options, shown only in the terminal
 # set -euxo pipefail
 
