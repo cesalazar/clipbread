@@ -23,22 +23,22 @@ inspiration.
 
 ## FAQ
 
-Q: My custom function is not being executed in the wrapper
+*Q: My custom function is not being executed in the wrapper*\
 A: Run clipbread in a terminal in case node is throwing an error, then check how
 to debug in the docs of the wrapper you're using.
 
-Q: Does this work with [bun][bun] or [deno][deno]?
+*Q: Does this work with [bun][bun] or [deno][deno]?*\
 A: Yes, but you'll have to make changes in the scripts. I did a very basic check
 for the lulz, but I don't use those regularly.
 
-Q: I don't know how to program, can I still use this?
+*Q: I don't know how to program, can I still use this?*\
 A: Sure, ask ChatGPT or any other AI to write a function to do what you need to
 achieve, and paste it in your config file.
 
-Q: Why didn't you write this in/on TypeScript, Rust, Cobol, a napkin?
+*Q: Why didn't you write this in/on TypeScript, Rust, Cobol, a napkin?*\
 A: Yes.
 
-Q: Seriously, JavaScript sucks.
+*Q: Seriously, JavaScript sucks.*\
 A: I know.
 
 [alfred]: https://www.alfredapp.com/
