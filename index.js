@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 // Transform the clipboard content by function name and/or aliases, e.g.:
-// $ clipbread trim double singleQuote
-// $ clipbread t d s
+// $ clipbread trim doubleQuote singleQuote
+// $ clipbread t dq s
 
 const { name: appName, version, description } = require('./package')
 const {
