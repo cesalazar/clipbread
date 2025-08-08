@@ -92,12 +92,16 @@ const applyTransform = (arg) => {
   }
 }
 
-hasArg('-l') && logAndExit(listFunctionsAndAliases(functions, aliases))
+if (require.main === module) {
+  hasArg('-l') && logAndExit(listFunctionsAndAliases(functions, aliases))
 
-hasArg('-i') && logAndExit(setUserConfig(configFileName))
+  hasArg('-i') && logAndExit(setUserConfig(configFileName))
 
-hasArg('-h') && showHelp(0)
+  hasArg('-h') && showHelp(0)
 
-!args.length && showHelp(1)
+  !args.length && showHelp(1)
 
-args.forEach((arg) => !['-L', '-q'].includes(arg) && applyTransform(arg))
+  args.forEach((arg) => !['-L', '-q'].includes(arg) && applyTransform(arg))
+}
+
+module.exports = { findFunctionByNameOrAlias }
